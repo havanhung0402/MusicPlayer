@@ -13,7 +13,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_toolbar"
+            android:layout_height="@dimen/dp_48"
             android:theme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_scrollFlags="scroll|enterAlways"/>
         <android.support.design.widget.TabLayout

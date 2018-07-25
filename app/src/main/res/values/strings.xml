@@ -4,5 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_song_flagment">Song</string>
-    <string name="title_single_flagment">Single</string>
+    <string name="title_single_flagment">Singer</string>
+    <string name="song_name_template">Tự lau nước mắt</string>
+    <string name="singer_name_template">Mr.Siro</string>
 </resources>
