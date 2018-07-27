@@ -16,7 +16,6 @@ public class SongFragment extends Fragment {
 
     private List<Song> mSongs;
     private SongsAdater mSongsAdapter;
-    private RecyclerView mRecyclerView;
     public SongFragment() {
         // Required empty public constructor
     }
@@ -31,8 +30,7 @@ public class SongFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_song, container, false);
-        mRecyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView mRecyclerView = (RecyclerView) inflater.inflate(R.layout.content_main, container, false);
         mSongs = new ArrayList<>();
         mSongs.add(new Song("Tự lau nước mắt", "Mr.Siro","sdcard/a.jpg"));
         mSongs.add(new Song("Dưới những cơn mưa", "Mr.Siro","sdcard/a.jpg"));
@@ -45,7 +43,7 @@ public class SongFragment extends Fragment {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setAdapter(mSongsAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        return view;
+        return mRecyclerView;
     }
 
     @Override
