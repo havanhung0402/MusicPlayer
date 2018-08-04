@@ -1,4 +1,4 @@
-package com.example.hungdev.musicplayer;
+package com.example.hungdev.musicplayer.main;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
