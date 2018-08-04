@@ -14,9 +14,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_16"
+        android:maxLength="22"
         android:text="@string/song_name_template"
+        android:maxLines="1"
+
         android:textSize="@dimen/sp_16"
-        android:layout_toRightOf="@+id/imageItem"/>
+        android:layout_toEndOf="@+id/imageItem"/>
     <TextView
         android:id="@+id/text_singer"
         android:layout_width="wrap_content"
@@ -24,6 +27,6 @@
         android:layout_below="@+id/text_song_name"
         android:textSize="@dimen/sp_12"
         android:text="@string/singer_name_template"
-        android:layout_toRightOf="@+id/imageItem"
+        android:layout_toEndOf="@+id/imageItem"
         />
 </RelativeLayout>

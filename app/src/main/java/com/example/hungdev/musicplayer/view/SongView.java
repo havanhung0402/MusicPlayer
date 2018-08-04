@@ -1,5 +1,6 @@
 package com.example.hungdev.musicplayer.view;
 
+import com.example.hungdev.musicplayer.model.adapter.SongsAdapter;
 import com.example.hungdev.musicplayer.model.entity.Song;
 
 import java.util.List;
@@ -9,5 +10,6 @@ import java.util.List;
  */
 
 public interface SongView {
-    void displaySongs(List<Song> songs);
+    void displaySongs(SongsAdapter adapter);
+    void play(List<Song> songs);
 }

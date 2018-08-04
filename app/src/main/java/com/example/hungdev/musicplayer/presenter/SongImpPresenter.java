@@ -5,5 +5,5 @@ package com.example.hungdev.musicplayer.presenter;
  */
 
 public interface SongImpPresenter {
-
+    void getMp3External();
 }

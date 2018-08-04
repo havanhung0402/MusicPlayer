@@ -10,16 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.hungdev.musicplayer.R;
-import com.example.hungdev.musicplayer.model.adapter.SongsAdater;
+import com.example.hungdev.musicplayer.model.adapter.SongsAdapter;
 import com.example.hungdev.musicplayer.model.entity.Song;
+import com.example.hungdev.musicplayer.presenter.SongPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SongFragment extends Fragment {
-
-    private List<Song> mSongs;
-    private SongsAdater mSongsAdapter;
+public class SongFragment extends Fragment implements SongView{
+    private SongPresenter mSongPresenter;
+    private SongsAdapter mSongsAdapter;
+    RecyclerView mRecyclerView;
     public SongFragment() {
         // Required empty public constructor
     }
@@ -34,19 +35,11 @@ public class SongFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        RecyclerView mRecyclerView = (RecyclerView) inflater.inflate(R.layout.content_main, container, false);
-        mSongs = new ArrayList<>();
-        mSongs.add(new Song("Tự lau nước mắt", "Mr.Siro","sdcard/a.jpg"));
-        mSongs.add(new Song("Dưới những cơn mưa", "Mr.Siro","sdcard/a.jpg"));
-        mSongs.add(new Song("Day dứt nỗi đau", "Mr.Siro","sdcard/a.jpg"));
-        mSongs.add(new Song("Lặng lẽ tổn thương", "Mr.Siro","sdcard/a.jpg"));
-        mSongs.add(new Song("Đã từng vô giá", "Mr.Siro","sdcard/a.jpg"));
-        mSongs.add(new Song("Tình yêu chắp vá", "Mr.Siro","sdcard/a.jpg"));
-        mSongs.add(new Song("Gương mặt lạ lẫm", "Mr.Siro","sdcard/a.jpg"));
-        mSongsAdapter = new SongsAdater(mSongs);
+        mRecyclerView = (RecyclerView) inflater.inflate(R.layout.content_main, container, false);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setAdapter(mSongsAdapter);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mSongPresenter = new SongPresenter(getActivity(), this, mSongsAdapter);
+        mSongPresenter.getMp3External();
         return mRecyclerView;
     }
 
@@ -58,5 +51,15 @@ public class SongFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void displaySongs(SongsAdapter adapter) {
+        mRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void play(List<Song> songs) {
+
     }
 }
