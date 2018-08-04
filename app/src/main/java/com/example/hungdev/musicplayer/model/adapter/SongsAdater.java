@@ -1,12 +1,14 @@
-package com.example.hungdev.musicplayer;
+package com.example.hungdev.musicplayer.model.adapter;
 
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.hungdev.musicplayer.R;
+import com.example.hungdev.musicplayer.model.entity.Song;
 
 import java.util.List;
 

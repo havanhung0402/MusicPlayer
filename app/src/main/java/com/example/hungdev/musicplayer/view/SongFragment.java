@@ -1,4 +1,4 @@
-package com.example.hungdev.musicplayer;
+package com.example.hungdev.musicplayer.view;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,6 +8,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.hungdev.musicplayer.R;
+import com.example.hungdev.musicplayer.model.adapter.SongsAdater;
+import com.example.hungdev.musicplayer.model.entity.Song;
 
 import java.util.ArrayList;
 import java.util.List;

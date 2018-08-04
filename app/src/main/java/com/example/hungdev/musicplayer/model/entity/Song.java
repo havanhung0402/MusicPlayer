@@ -1,4 +1,4 @@
-package com.example.hungdev.musicplayer;
+package com.example.hungdev.musicplayer.model.entity;
 
 /**
  * Created by hungdev on 24/07/2018.
