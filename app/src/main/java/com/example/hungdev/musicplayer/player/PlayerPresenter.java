@@ -23,9 +23,22 @@ public class PlayerPresenter implements PlayerContract.Presenter {
         mContext = context;
         mView = view;
     }
+    public PlayerPresenter(Context context) {
+        mContext = context;
+    }
 
     @Override
     public void loadSongDetails(Song song, List<Song> songs) {
         mView.showSongView(song, songs);
+    }
+
+    @Override
+    public void updateCurrentTime(String current) {
+        mView.showUpdateCurrentTime(current);
+    }
+
+    @Override
+    public void updateSeerBar(int progress) {
+        mView.showUpdateSeekBar(progress);
     }
 }

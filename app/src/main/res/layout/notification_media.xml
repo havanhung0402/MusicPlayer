@@ -42,7 +42,6 @@
         android:layout_below="@+id/text_artist"
         android:layout_marginRight="16dp"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:progress="20"
         />
     <LinearLayout
         android:layout_width="match_parent"

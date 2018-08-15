@@ -20,6 +20,7 @@ import com.example.hungdev.musicplayer.R;
 import com.example.hungdev.musicplayer.data.Song;
 import com.example.hungdev.musicplayer.player.MusicService;
 import com.example.hungdev.musicplayer.player.PlayerActivity;
+import com.example.hungdev.musicplayer.util.Util;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -92,13 +93,13 @@ public class SongFragment extends Fragment implements SongContract.View, SongsAd
     @Override
     public void showPlayer(Song song, int positon) {
         Intent intent = new Intent(getActivity(), PlayerActivity.class);
-        intent.putExtra("song", song);
-        intent.putExtra("pos", positon);
-        intent.putParcelableArrayListExtra("songs", (ArrayList<? extends Parcelable>) mSongs);
+        intent.putExtra(Util.KEY_SONG, song);
+        intent.putExtra(Util.KEY_POSITION, positon);
+        intent.putParcelableArrayListExtra(Util.KEY_SONGS, (ArrayList<? extends Parcelable>) mSongs);
         startActivity(intent);
         Intent intentService = new Intent(getActivity(), MusicService.class);
-        intentService.putExtra("song", song);
-        intentService.putExtra("pos", positon);
+        intentService.putExtra(Util.KEY_SONG, song);
+        intentService.putExtra(Util.KEY_POSITION, positon);
         intentService.putParcelableArrayListExtra("songs", (ArrayList<? extends Parcelable>) mSongs);
         getActivity().startService(intentService);
     }

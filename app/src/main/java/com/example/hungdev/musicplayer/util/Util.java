@@ -15,4 +15,18 @@ public class Util {
     public static final String ACTION_COMPLETE = "complete";
     public static final String ACTION_STATUS = "status";
     public static final String ACTION_CLEAR = "clear";
+
+    public static long getCurrentTime(int progress, long total){
+        double currentTime = ((double)total / 100) * progress;
+        return (long) currentTime;
+    }
+
+    public static int getProgress(long currentTime, long total){
+        double progress = ((double)currentTime / total) * 100;
+        return (int) progress;
+    }
+
+    public static int toSecond(int current){
+        return current/1000;
+    }
 }

@@ -1,23 +1,16 @@
 package com.example.hungdev.musicplayer.player;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -42,6 +35,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
     private Boolean mBound = false;
     private ImageView mImageView;
     private TextView mTextViewSong;
+    private TextView mTextView_currentTime;
+    private TextView mTextView_totalTime;
     private SeekBar mSeekBar;
     private ImageView mImageViewState;
     private ImageView mImageView_next;
@@ -49,7 +44,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
     private PlayerPresenter mPresenter;
     private int mPos;
     private boolean mIsGranted = false;
-    private BroadcastReceiver mBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,24 +63,6 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         mPos = intent.getIntExtra(Util.KEY_POSITION,0);
         mSongs =  intent.getParcelableArrayListExtra(Util.KEY_SONGS);
         mPresenter.loadSongDetails(mSong, mSongs);
-        mBroadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Util.ACTION_NEXT)){
-                   setPositionNext();
-                }else if (intent.getAction().equals(Util.ACTION_PREVIOUS)){
-                    setPositionPrevious();
-                }else if (intent.getAction().equals(Util.ACTION_STATUS)){
-                   if(mMusicService.isPlaying()){
-                       mImageViewState.setImageResource(R.drawable.ic_pause_white_64dp);
-                   }else {
-                       mImageViewState.setImageResource(R.drawable.ic_play_arrow_white_64dp);
-                   }
-                }else if (intent.getAction().equals(Util.ACTION_COMPLETE)){
-                    setPositionNext();
-                }
-            }
-        };
         IntentFilter filter = new IntentFilter();
         filter.addAction(Util.ACTION_NEXT);
         filter.addAction(Util.ACTION_PREVIOUS);
@@ -94,21 +70,24 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         filter.addAction(Util.ACTION_STATUS);
         registerReceiver(mBroadcastReceiver, filter);
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Util.ACTION_NEXT)){
+                setPositionNext();
+            }else if (intent.getAction().equals(Util.ACTION_PREVIOUS)){
+                setPositionPrevious();
+            }else if (intent.getAction().equals(Util.ACTION_STATUS)){
+                if(mMusicService.isPlaying()){
+                    mImageViewState.setImageResource(R.drawable.ic_pause_white_48dp);
+                }else {
+                    mImageViewState.setImageResource(R.drawable.ic_play_arrow_white_48dp);
+                }
+            }else if (intent.getAction().equals(Util.ACTION_COMPLETE)){
+                setPositionNext();
+            }
+        }
+    };
 
     @Override
     protected void onDestroy() {
@@ -116,10 +95,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         unregisterReceiver(mBroadcastReceiver);
     }
 
-
     private void findView() {
         mImageView = findViewById(R.id.image_song);
         mTextViewSong = findViewById(R.id.text_title);
+        mTextView_currentTime = findViewById(R.id.text_currentTime);
+        mTextView_totalTime = findViewById(R.id.text_totalTime);
         mSeekBar = findViewById(R.id.seek_bar);
         mImageViewState = findViewById(R.id.button_status_music);
         mImageView_previous = findViewById(R.id.button_previous);
@@ -180,7 +160,17 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         }else {
             mImageView.setImageBitmap(BitmapFactory.decodeByteArray(images,0, song.getUriImage().length));
         }
-        mImageViewState.setImageResource(R.drawable.ic_pause_white_64dp);
+        mImageViewState.setImageResource(R.drawable.ic_pause_white_48dp);
+    }
+
+    @Override
+    public void showUpdateCurrentTime(String current) {
+        mTextView_currentTime.setText(current);
+    }
+
+    @Override
+    public void showUpdateSeekBar(int progress) {
+        mSeekBar.setProgress(progress);
     }
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -188,6 +178,8 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.LocalBinder binder = (MusicService.LocalBinder) service;
             mMusicService = binder.getService();
+            mMusicService.setPresenter(mPresenter);
+            mTextView_totalTime.setText(mMusicService.getDuration());
             mBound = true;
         }
 
@@ -265,10 +257,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
     private void setMusicStatus() {
         if(mBound == true){
             if(mMusicService.isPlaying()){
-                mImageViewState.setImageResource(R.drawable.ic_play_arrow_white_64dp);
+                mImageViewState.setImageResource(R.drawable.ic_play_arrow_white_48dp);
                 mMusicService.pause();
             }else {
-                mImageViewState.setImageResource(R.drawable.ic_pause_white_64dp);
+                mImageViewState.setImageResource(R.drawable.ic_pause_white_48dp);
                 mMusicService.start();
             }
         }
@@ -276,7 +268,9 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+        if(fromUser == true){
+            mMusicService.seekTo(progress);
+        }
     }
 
     @Override

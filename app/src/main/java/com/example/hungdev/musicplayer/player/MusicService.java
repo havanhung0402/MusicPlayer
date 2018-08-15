@@ -11,7 +11,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -36,6 +38,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     private Intent mIntentPlayer;
     private PendingIntent mPendingIntent;
     private final IBinder mIBinder = new LocalBinder();
+    private Handler mHandler = new Handler();
+    private PlayerPresenter mPresenter;
     public MusicService() {
     }
 
@@ -82,6 +86,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     }
 
+    public void setPresenter(PlayerPresenter presenter){
+        this.mPresenter = presenter;
+    }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mPos = intent.getIntExtra(Util.KEY_POSITION, 0);
@@ -101,6 +108,45 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         }
         showNotification();
     }
+
+    private void updateTime() {
+        mHandler.postDelayed(runnable, 1000);
+    }
+    public String getDuration(){
+        int total = mMediaPlayer.getDuration();
+        int minute = ((total/1000) / 60);
+        int second = (total/1000) % 60;
+        String totalTime;
+        if(second > 9){
+            totalTime = "0" + minute + ":" + second;
+        }else {
+            totalTime = "0" + minute + ":" + "0" + second;
+        }
+        return totalTime;
+    }
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            int currentTime = mMediaPlayer.getCurrentPosition();
+            int total = mMediaPlayer.getDuration();
+            int minute = ((currentTime/1000) / 60);
+            int second = (currentTime/1000) % 60;
+            String current_time;
+            if(second > 9){
+                current_time = "0" + minute + ":" + second;
+            }else {
+                current_time = "0" + minute + ":" + "0" + second;
+            }
+            int progress = (int) (((double)100/total) * currentTime);
+            mRemoteViews.setProgressBar(R.id.progress_notify,100, progress, false);
+            startForeground(1, mNotification);
+            mPresenter.updateSeerBar(progress);
+            mPresenter.updateCurrentTime(current_time);
+            Log.d("Thoi gian", current_time);
+            mHandler.postDelayed(this, 1000);
+        }
+    };
 
     private void showNotification() {
         Song song = mSongs.get(mPos);
@@ -169,6 +215,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     @Override
     public void onPrepared(MediaPlayer mp) {
         mMediaPlayer.start();
+        updateTime();
     }
 
     @Override
@@ -180,6 +227,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void seekTo(int progress) {
+        long total  = mMediaPlayer.getDuration();
+        mMediaPlayer.seekTo((int) Util.getCurrentTime(progress, total));
     }
 
     public class LocalBinder extends Binder {
