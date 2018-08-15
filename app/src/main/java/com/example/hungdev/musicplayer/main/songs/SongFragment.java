@@ -2,8 +2,10 @@ package com.example.hungdev.musicplayer.main.songs;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +18,10 @@ import android.widget.Toast;
 
 import com.example.hungdev.musicplayer.R;
 import com.example.hungdev.musicplayer.data.Song;
+import com.example.hungdev.musicplayer.player.MusicService;
+import com.example.hungdev.musicplayer.player.PlayerActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,10 +75,13 @@ public class SongFragment extends Fragment implements SongContract.View, SongsAd
 
     @Override
     public void showSongs(List<Song> songs) {
-       mTextViewEmpty.setVisibility(View.GONE);
-       mSongs.clear();
-       mSongs.addAll(songs);
-       mSongsAdapter.notifyDataSetChanged();
+       if(songs != null){
+           mTextViewEmpty.setVisibility(View.GONE);
+           mSongs.clear();
+           mSongs.addAll(songs);
+           mSongsAdapter.notifyDataSetChanged();
+       }
+       mSongs = songs;
     }
 
     @Override
@@ -82,8 +90,17 @@ public class SongFragment extends Fragment implements SongContract.View, SongsAd
     }
 
     @Override
-    public void showErrorDialog() {
-        Toast.makeText(getActivity(), R.string.text_path_not_available, Toast.LENGTH_SHORT).show();
+    public void showPlayer(Song song, int positon) {
+        Intent intent = new Intent(getActivity(), PlayerActivity.class);
+        intent.putExtra("song", song);
+        intent.putExtra("pos", positon);
+        intent.putParcelableArrayListExtra("songs", (ArrayList<? extends Parcelable>) mSongs);
+        startActivity(intent);
+        Intent intentService = new Intent(getActivity(), MusicService.class);
+        intentService.putExtra("song", song);
+        intentService.putExtra("pos", positon);
+        intentService.putParcelableArrayListExtra("songs", (ArrayList<? extends Parcelable>) mSongs);
+        getActivity().startService(intentService);
     }
 
     @Override
@@ -92,7 +109,7 @@ public class SongFragment extends Fragment implements SongContract.View, SongsAd
     }
 
     @Override
-    public void onSongClick(Song clickedSong) {
-        Toast.makeText(getActivity(), clickedSong.getSongName(), Toast.LENGTH_SHORT).show();
+    public void onSongClick(Song clickedSong, int position) {
+        mSongPresenter.openPlayer(clickedSong, position);
     }
 }

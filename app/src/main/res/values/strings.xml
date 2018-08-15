@@ -9,4 +9,9 @@
     <string name="singer_name_template">Mr.Siro</string>
     <string name="empty_text">Empty</string>
     <string name="text_path_not_available">Path is not available</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="key_name">name</string>
+    <string name="key_path">path</string>
+    <string name="key_images">image_uri</string>
+    <string name="key_artist">artist</string>
 </resources>

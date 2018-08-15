@@ -16,4 +16,5 @@ public interface SongDataSource {
           void onDataNotAvailable();
      }
      void getSongs(LoadSongsCallback callback);
+     void getSong(String path);
 }
