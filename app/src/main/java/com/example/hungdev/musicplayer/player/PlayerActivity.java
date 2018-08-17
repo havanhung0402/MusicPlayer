@@ -120,7 +120,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         super.onDestroy();
         unregisterReceiver(mBroadcastReceiver);
     }
-    
+
     private void findView() {
         mImageView = findViewById(R.id.image_song);
         mTextViewSong = findViewById(R.id.text_title);

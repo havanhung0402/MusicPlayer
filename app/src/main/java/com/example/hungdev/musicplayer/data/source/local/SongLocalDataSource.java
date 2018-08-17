@@ -37,6 +37,11 @@ public class SongLocalDataSource implements SongDataSource{
         new AsynSong(callback).execute();
     }
 
+    @Override
+    public void getSong(String path) {
+
+    }
+
     private void outputSong(Cursor cursor) {
         MediaMetadataRetriever metaRetriver = new MediaMetadataRetriever();
         String mSongName = cursor.getString(mTitleColIndex);

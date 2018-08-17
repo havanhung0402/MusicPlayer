@@ -15,12 +15,12 @@ public interface SongContract {
     interface View {
         void showSongs(List<Song> songs);
         void showEmpty();
-        void showErrorDialog();
+        void showPlayer(Song song, int positon);
         void showMiniPlayer();
     }
 
     interface Presenter extends BasePresenter{
         void loadSongs();
-        void playMedia();
+        void openPlayer(Song song, int position);
     }
 }
