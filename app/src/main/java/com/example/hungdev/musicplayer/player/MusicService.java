@@ -49,27 +49,32 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Util.ACTION_NEXT)){
-                    try {
-                        next();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else if (intent.getAction().equals(Util.ACTION_PREVIOUS)){
-                    try {
-                        previous();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }else if (intent.getAction().equals(Util.ACTION_STATUS)){
-                    if(mMediaPlayer.isPlaying()){
-                        pause();
-                    }else {
-                        start();
-                    }
-                }else if(intent.getAction().equals(Util.ACTION_CLEAR)){
-                    stopForeground(true);
-                    stopSelf();
+                switch (intent.getAction()){
+                    case Util.ACTION_NEXT:
+                        try {
+                            next();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case Util.ACTION_PREVIOUS:
+                        try {
+                            previous();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case Util.ACTION_STATUS:
+                        if(mMediaPlayer.isPlaying()){
+                            pause();
+                        }else {
+                            start();
+                        }
+                        break;
+                    case Util.ACTION_CLEAR:
+                        stopForeground(true);
+                        stopSelf();
+                        break;
                 }
             }
         };
@@ -86,11 +91,11 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public int onStartCommand(Intent intent, int flags, int startId) {
         mPos = intent.getIntExtra(Util.KEY_POSITION, 0);
         mSongs =  intent.getParcelableArrayListExtra(Util.KEY_SONGS);
-        playmusic(intent);
+        playMusic(intent);
         return START_NOT_STICKY;
     }
 
-    private void playmusic(Intent intent) {
+    private void playMusic(Intent intent) {
         Song song = intent.getParcelableExtra(Util.KEY_SONG);
         try {
             mMediaPlayer.reset();

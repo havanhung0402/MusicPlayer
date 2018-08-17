@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerActivity extends AppCompatActivity implements PlayerContract.View,
-        View.OnClickListener, SeekBar.OnSeekBarChangeListener{
+        View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     private MusicService mMusicService;
     private List<Song> mSongs;
@@ -66,24 +66,29 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         mSongs = new ArrayList<>();
         Intent intent = getIntent();
         mSong = intent.getParcelableExtra(Util.KEY_SONG);
-        mPos = intent.getIntExtra(Util.KEY_POSITION,0);
-        mSongs =  intent.getParcelableArrayListExtra(Util.KEY_SONGS);
+        mPos = intent.getIntExtra(Util.KEY_POSITION, 0);
+        mSongs = intent.getParcelableArrayListExtra(Util.KEY_SONGS);
         mPresenter.loadSongDetails(mSong, mSongs);
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(Util.ACTION_NEXT)){
-                   setPositionNext();
-                }else if (intent.getAction().equals(Util.ACTION_PREVIOUS)){
-                    setPositionPrevious();
-                }else if (intent.getAction().equals(Util.ACTION_STATUS)){
-                   if(mMusicService.isPlaying()){
-                       mImageViewState.setImageResource(R.drawable.ic_pause_white_64dp);
-                   }else {
-                       mImageViewState.setImageResource(R.drawable.ic_play_arrow_white_64dp);
-                   }
-                }else if (intent.getAction().equals(Util.ACTION_COMPLETE)){
-                    setPositionNext();
+                switch (intent.getAction()) {
+                    case Util.ACTION_NEXT:
+                        setPositionNext();
+                        break;
+                    case Util.ACTION_PREVIOUS:
+                        setPositionPrevious();
+                        break;
+                    case Util.ACTION_STATUS:
+                        if (mMusicService.isPlaying()) {
+                            mImageViewState.setImageResource(R.drawable.ic_pause_white_64dp);
+                        } else {
+                            mImageViewState.setImageResource(R.drawable.ic_play_arrow_white_64dp);
+                        }
+                        break;
+                    case Util.ACTION_COMPLETE:
+                        setPositionNext();
+                        break;
                 }
             }
         };
@@ -115,8 +120,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         super.onDestroy();
         unregisterReceiver(mBroadcastReceiver);
     }
-
-
+    
     private void findView() {
         mImageView = findViewById(R.id.image_song);
         mTextViewSong = findViewById(R.id.text_title);
@@ -156,10 +160,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         String name = song.getSongName();
         byte[] images = song.getUriImage();
         mTextViewSong.setText(name);
-        if(images == null){
+        if (images == null) {
             mImageView.setImageResource(R.drawable.image_item_song);
-        }else {
-            mImageView.setImageBitmap(BitmapFactory.decodeByteArray(images,0, song.getUriImage().length));
+        } else {
+            mImageView.setImageBitmap(BitmapFactory.decodeByteArray(images, 0, song.getUriImage().length));
         }
         playService();
     }
@@ -175,10 +179,10 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         String name = song.getSongName();
         byte[] images = song.getUriImage();
         mTextViewSong.setText(name);
-        if(images == null){
+        if (images == null) {
             mImageView.setImageResource(R.drawable.image_item_song);
-        }else {
-            mImageView.setImageBitmap(BitmapFactory.decodeByteArray(images,0, song.getUriImage().length));
+        } else {
+            mImageView.setImageBitmap(BitmapFactory.decodeByteArray(images, 0, song.getUriImage().length));
         }
         mImageViewState.setImageResource(R.drawable.ic_pause_white_64dp);
     }
@@ -200,7 +204,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.button_status_music:
                 setMusicStatus();
                 break;
@@ -217,7 +221,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
     }
 
     private void previous() {
-        if(mBound == true){
+        if (mBound == true) {
             try {
                 setPositionPrevious();
                 mMusicService.previous();
@@ -228,7 +232,7 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
     }
 
     private void next() {
-        if(mBound == true){
+        if (mBound == true) {
             try {
                 setPositionNext();
                 mMusicService.next();
@@ -238,24 +242,24 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
         }
     }
 
-    private void setPositionPrevious(){
-        if(mPos == 0){
-            mPos = mSongs.size() -1;
+    private void setPositionPrevious() {
+        if (mPos == 0) {
+            mPos = mSongs.size() - 1;
             Song song = mSongs.get(mPos);
             showUpdateView(song);
-        }else {
+        } else {
             mPos--;
             Song song = mSongs.get(mPos);
             showUpdateView(song);
         }
     }
 
-    private void setPositionNext(){
-        if(mPos == mSongs.size() -1){
+    private void setPositionNext() {
+        if (mPos == mSongs.size() - 1) {
             mPos = 0;
             Song song = mSongs.get(mPos);
             showUpdateView(song);
-        }else {
+        } else {
             mPos++;
             Song song = mSongs.get(mPos);
             showUpdateView(song);
@@ -263,11 +267,11 @@ public class PlayerActivity extends AppCompatActivity implements PlayerContract.
     }
 
     private void setMusicStatus() {
-        if(mBound == true){
-            if(mMusicService.isPlaying()){
+        if (mBound == true) {
+            if (mMusicService.isPlaying()) {
                 mImageViewState.setImageResource(R.drawable.ic_play_arrow_white_64dp);
                 mMusicService.pause();
-            }else {
+            } else {
                 mImageViewState.setImageResource(R.drawable.ic_pause_white_64dp);
                 mMusicService.start();
             }
