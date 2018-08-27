@@ -21,7 +21,6 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.MyViewHolder
 
     private SongItemListener mSongItemListener;
     private List<Song> mSongs;
-    private SongContract.Presenter mPresenter;
 
     public SongsAdapter(List<Song> songs, SongItemListener songItemListener) {
         this.mSongs = songs;
@@ -55,7 +54,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.MyViewHolder
 
         @Override
         public void onClick(View v) {
-            mSongItemListener.onSongClick(mSongs.get(getAdapterPosition()));
+            mSongItemListener.onSongClick(mSongs.get(getAdapterPosition()), getAdapterPosition());
         }
     }
 
@@ -68,11 +67,11 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.MyViewHolder
             holder.mImageItem.setImageBitmap(BitmapFactory.decodeByteArray(song.getUriImage(),0,song.getUriImage().length));
         }
         else {
-            holder.mImageItem.setBackgroundResource(R.drawable.image_item_song);
+            holder.mImageItem.setImageResource(R.drawable.image_item_song);
         }
     }
 
     public interface SongItemListener {
-        void onSongClick(Song clickedSong);
+        void onSongClick(Song clickedSong, int positon);
     }
 }

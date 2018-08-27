@@ -33,8 +33,8 @@ public class SongPresenter implements SongContract.Presenter, SongLocalDataSourc
     }
 
     @Override
-    public void playMedia() {
-
+    public void openPlayer(Song song, int positon) {
+        mSongsView.showPlayer(song, positon);
     }
 
     @Override
